@@ -20,7 +20,7 @@ This proposal delivers:
 
 4. CanTrustAI as the canonical reference implementation - a live, production deployment of a Canton-settled x402 resource server, demonstrating the full stack end-to-end.
 
-CanTrustAI's infrastructure was already deployed (smart contracts, on-chain payment settlement, production UI), which serves as the empirical foundation for this proposal. Forward development is funded across four milestones at 150,000 CC / 2500,000 CC / 300,000 CC / 400,000 CC, for a total of 1,100,000 CC.
+CanTrustAI's infrastructure was already deployed (smart contracts, on-chain payment settlement, production UI), which serves as the empirical foundation for this proposal. Forward development is funded across four milestones at 150,000 CC / 250,000 CC / 300,000 CC / 400,000 CC, for a total of 1,100,000 CC.
 
 ---
 
