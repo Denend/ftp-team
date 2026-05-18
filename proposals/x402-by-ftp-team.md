@@ -208,7 +208,7 @@ Deliverables:
 ## Milestone 2 (Performance Based)
 
 ### Target
-0.25 PPS average over 7 days (~21.6k settled payments/day)
+850 MB of total network traffic burned on the Canton Network. At current network conditions, this is estimated to correspond to approximately 380,000 $CC burned, though the actual amount of $CC required may vary over time.
 
 ### Funding
 250,000 CC upon committee acceptance of delivery.
@@ -218,7 +218,7 @@ Deliverables:
 ## Milestone 3 (Performance Based)
 
 ### Target
-1 PPS average over 7 days (~86.4k settled payments/day)
+1.85 GB of total network traffic burned on the Canton Network. At current network conditions, this is estimated to correspond to approximately 820,000 $CC burned, though the actual amount of $CC required may vary over time.
 
 ### Funding
 300,000 CC upon committee acceptance of delivery.
@@ -228,7 +228,7 @@ Deliverables:
 ## Milestone 4 (Performance Based)
 
 ### Target
-3 PPS average over 14 days (~259.2k settled payments/day)
+3.1 GB of total network traffic burned on the Canton Network. At current network conditions, this is estimated to correspond to approximately 1,370,000 $CC burned, though the actual amount of $CC required may vary over time.
 
 ### Funding
 400,000 CC upon committee acceptance of delivery.
