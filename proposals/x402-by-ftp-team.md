@@ -209,6 +209,8 @@ Deliverables:
 
 ### Target
 850 MB of total network traffic burned on the Canton Network. At current network conditions, this is estimated to correspond to approximately 380,000 $CC burned, though the actual amount of $CC required may vary over time.
+Traffic counted toward this milestone must originate from real usage by users/companies not affiliated with the FTP team.
+
 
 ### Funding
 250,000 CC upon committee acceptance of delivery.
@@ -219,6 +221,8 @@ Deliverables:
 
 ### Target
 1.85 GB of total network traffic burned on the Canton Network. At current network conditions, this is estimated to correspond to approximately 820,000 $CC burned, though the actual amount of $CC required may vary over time.
+Traffic counted toward this milestone must originate from real usage by users/companies not affiliated with the FTP team.
+
 
 ### Funding
 300,000 CC upon committee acceptance of delivery.
@@ -229,6 +233,7 @@ Deliverables:
 
 ### Target
 3.1 GB of total network traffic burned on the Canton Network. At current network conditions, this is estimated to correspond to approximately 1,370,000 $CC burned, though the actual amount of $CC required may vary over time.
+Traffic counted toward this milestone must originate from real usage by users/companies not affiliated with the FTP team.
 
 ### Funding
 400,000 CC upon committee acceptance of delivery.
