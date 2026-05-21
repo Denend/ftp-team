@@ -125,5 +125,5 @@ Describe the ecosystem impact, expected adoption, or strategic importance.  Prov
 ## Rationale
 Why is this the right approach to deliver that value?
 Explain design decisions, alternatives considered, and why this solution is preferred.  In particular, explain how this proposal fits
-into the existing ecosystem tooling, libraries, frameworks, etc. If this is a proposal to replace something that exists,
+into the existing ecosystem tooling, libraries, frameworks, etc. If this is a proposal to replace something that exists,
 then explain why the proposal cannot fit into the existing component by extending what exists.  The default approach should be to extend what exists.
