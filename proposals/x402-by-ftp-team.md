@@ -1,8 +1,13 @@
 ## Development Fund Proposal — x402 Protocol Integration for Canton
 
-Author: Denend | FTP  
-Status: Submitted  
-Created: 2026-03-12  
+| Field | Value |
+| :---- | :---- |
+| Author | Denend |
+| Org | FTP |
+| Status | Approved |
+| Created | 2026-03-12 |
+| Approved | 2026-05-21 |
+| PR | [#78](https://github.com/canton-foundation/canton-dev-fund/pull/78) | 
 
 ---
 
@@ -20,7 +25,7 @@ This proposal delivers:
 
 4. CanTrustAI as the canonical reference implementation - a live, production deployment of a Canton-settled x402 resource server, demonstrating the full stack end-to-end.
 
-CanTrustAI's infrastructure was already deployed (smart contracts, on-chain payment settlement, production UI), which serves as the empirical foundation for this proposal. Forward development is funded across four milestones at 150,000 CC / 250,000 CC / 300,000 CC / 400,000 CC, for a total of 1,100,000 CC.
+CanTrustAI's infrastructure was already deployed (smart contracts, on-chain payment settlement, production UI), which serves as the empirical foundation for this proposal. Forward development is funded across four milestones at 150,000 CC / 250,000 CC / 445,806 CC / 594,408 CC, for a total of 1,440,214 CC.
 
 ---
 
@@ -225,7 +230,7 @@ Traffic counted toward this milestone must originate from real usage by users/co
 
 
 ### Funding
-300,000 CC upon committee acceptance of delivery.
+445,806 CC upon committee acceptance of delivery.
 
 ---
 
@@ -236,7 +241,7 @@ Traffic counted toward this milestone must originate from real usage by users/co
 Traffic counted toward this milestone must originate from real usage by users/companies not affiliated with the FTP team.
 
 ### Funding
-400,000 CC upon committee acceptance of delivery.
+594,408 CC upon committee acceptance of delivery.
 
 ---
 
@@ -294,7 +299,7 @@ The Canton x402 facilitator is additive to the Canton ecosystem. It does not req
 
 # Funding
 
-Total Funding Request: **1,100,000 CC**
+Total Funding Request: **1,440,214 CC**
 
 
 Milestone 1.1 — Canton x402 Facilitator  
@@ -313,12 +318,12 @@ Milestone 2 (Performance based):
 
 Milestone 3 (Performance based):
 
-300000 $CC
+445,806 CC
 
 
 Milestone 4 (Performance based):
 
-400000 $CC
+594,408 CC
 
 ---
 
