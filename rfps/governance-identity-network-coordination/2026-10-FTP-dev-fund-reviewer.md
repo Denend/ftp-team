@@ -1,260 +1,117 @@
-## Development Fund Proposal: Dev Fund Reviewer, Milestone Review Assistant
+# Milestone Review Bot for the Canton Development Fund
 
-| Field | Value |
-| --- | --- |
-| Organization | FTP |
-| Author / Primary Contact | Daniel, FTP ([@Denend](https://github.com/Denend)) |
-| Status | Submitted |
-| Created | 2026-10-19 |
-| Proposal Type | RFP-aligned |
-| RFP / Roadmap Area | Governance, Identity & Network Coordination, RFP 9 Governance automation |
-| Champion | Shaul Kfir, Digital Asset ([@shaul-da](https://github.com/shaul-da)) |
-| Total Funding Request | 830,000 CC |
-| Project Duration | 4 months build, adoption until month 12 |
-| Label | onchain-governance |
+## Development Fund Proposal
+
+**Organization:** Obsidian Systems and FTP  
+**Author / Primary Contact:** Olaoluwa Mustapha, Obsidian Systems, ola.mustapha@obsidian.systems; Daniel Hansley, FTP  
+**Status:** Submitted  
+**Created:** 2026-10-20  
+**Proposal Type:** RFP-aligned proposal  
+**RFP / Roadmap Area:** Governance, Identity & Network Coordination: RFP #9, Governance automation  
+**Champion:** Shaul Kfir, Digital Asset ([@shaul-da](https://github.com/shaul-da))  
+**Total Funding Request:** 2,400,000 CC  
+**Project Duration:** 12 months. Delivery by month 5, adoption to month 12. Maintenance from Milestone 2 is a separate quarterly grant.  
+**Label:** onchain-governance  
 
 ---
 
 ## Abstract
 
-This proposal adds an AI review assistant to the Dev Fund repository. It does the hands-on part of milestone review for the Fund's reviewers: it installs the packages, builds the code, runs the tests and compares the docs with the code.
+Foundation reviewers and Tech & Ops Committee members check the evidence for every Development Fund milestone by hand before the committee votes. Obsidian Systems and FTP will build an open-source bot that runs when a team posts its delivery report, or when a user starts it from a milestone’s issue. The bot checks the committee's gates, including the champion's endorsement, and then checks that the evidence is complete. It reviews the code, architecture and security of the work. It checks every acceptance criterion. A separate job without model access re-checks every source the bot cites, then posts the conclusions in the milestone's issue. The bot keeps the milestone's status on the fund's board current.
 
-The assistant starts when a delivery report is posted. It first checks that the evidence is complete, then gives every deliverable a verdict (Met, Partly met, Not met or Can't verify) with a one-line reason and links to its sources. It also lists rated findings on code quality, architecture and fit with Canton tooling. It posts as an automated reviewer and says it can be wrong, tags the champion when their sign-off is needed and keeps the Fund's milestone board current. The Fund's reviewers still decide.
-
-Every milestone is reviewed before it is paid. From June to September 2026 reviewers received 14 to 23 deliveries a month.
-
-The request is 830,000 CC: 470,000 CC for the build and up to 360,000 CC paid only for live reviews that hold up.
-
----
+Obsidian and FTP will calibrate the bot on past milestone reviews and release it under Apache 2.0. It needs no change to Canton, Splice or Daml. This proposal combines FTP's [PR #912](https://github.com/canton-foundation/canton-dev-fund/pull/912) and Obsidian's [PR #917](https://github.com/canton-foundation/canton-dev-fund/pull/917).
 
 ## Specification
 
 ### 1. Objective
 
-Reviewers get a short, sourced review of each delivery as soon as it is reported and no longer do the installs, builds and test runs by hand. Grantees learn early what evidence is missing.
+At the end of this grant, the bot reviews every milestone when its delivery report is posted. A listed reviewer can also start it on any milestone. It posts one report in the milestone's issue, links each source it used and keeps the milestone's status on the board current.
 
 ### 2. Implementation Mechanics
 
-**How a review runs**
+The bot is a GitHub App. Its token can read the fund's repository, post issue comments and update project boards in the Foundation's GitHub organization. It holds no other permission. On project boards the bot changes only the Status field of the Dev Fund Milestones board. A review starts when the grantee or a listed reviewer posts or edits a delivery report. A daily pass catches any report the bot missed and skips unchanged ones. A listed reviewer or the grantee can start or rerun a review with a label or command in the milestone’s issue. A report started this way names that user. The grantee gets three runs a day, report edits included. Listed reviewers are SIG members and Canton Foundation or Digital Asset staff, on a list in the fund's repository. No job holds both model access and write access. A separate job without model access re-checks every cited source, then posts.
 
-```mermaid
-flowchart LR
-  T["Delivery report,<br/>daily pass or /verify"] --> S["Scripts"]
-  S --> E["Evidence check"]
-  E -->|"evidence missing"| M["Posts what<br/>is missing"]
-  E -->|"complete"| A["Agent in sandbox:<br/>items + code review"]
-  A --> C["Source check<br/>+ second pass"]
-  C --> P["Posted on the issue<br/>as an automated review"]
-  M --> B["Board status"]
-  P --> B
-  P -.->|"/wrong, any time"| F["FTP answers,<br/>fixes the tool"]
-```
+A gate script runs before the AI model sees anything. The committee edits the gate list by pull request. The first gates check the champion's endorsement, an open vote and unmerged dependencies. Gates report their result in the review and do not stop it.
 
-1. The assistant starts when the grantee or a listed reviewer posts or edits a delivery report on a milestone issue. A daily pass catches anything missed and skips unchanged reports.
-2. Scripts check the basics: links, files, license, CI, package versions, and whether the README's settings match the code.
-3. The agent checks the evidence before the deliverables. The report should name the delivered version, give evidence for each item and include what reviewers usually ask for on this kind of milestone, taken from a checklist built from reviewers' comments on past milestones. If the evidence falls short, the assistant posts what is missing and goes no further until the report changes or a listed reviewer runs `/verify`.
-4. The agent goes through each item. It reads the milestone, the delivery report and the code, builds and tests the code in a sandbox, opens linked pages and confirms cited transactions on Scan. Then it reviews the code.
-5. Code checks every source the agent cites, and a second pass tries to disprove each verdict and finding. A verdict that cannot be confirmed becomes Can't verify, and a finding that cannot be confirmed is dropped.
-6. The assistant posts one comment and edits it on later runs. The comment says at the top that an AI agent wrote it, that it may contain mistakes, and that the Fund's reviewers remain responsible for acceptance. When an item likely needs someone's sign-off, it tags the champion or relevant core contributors from the tagging list, at most three people.
-7. It sets the milestone's status on the Dev Fund Milestones board, for example Ready for evidence when evidence is missing and Ready for Milestone Review once a full review is posted.
+Scripts also check links, files, license, CI, package versions and whether the README's settings match the code. The bot then checks that the evidence is complete. The delivery report should name the delivered version, give evidence for each acceptance criterion and include what reviewers usually ask for on this kind of milestone. The evidence checklist of what reviewers ask for is built from their comments on past milestones and kept current. If the evidence falls short, the bot posts what is missing and goes no further until the report changes or a listed reviewer reruns the review. When a criterion likely needs someone's sign-off, the bot tags the champion or the relevant core contributors from the tagging list in the fund's repository. It tags at most three people.
 
-When one milestone has two issues, one from the tracker and one opened by Foundation staff, the assistant reviews it once and links the other issue.
+Next the bot checks that each evidence link shows what the team claims. Separately, it checks every acceptance criterion in the approved proposal against the delivered work. It marks each one met, partly met, not met or can't verify, with a one-line reason. Every fact behind a verdict has a location, such as file lines, a registry entry, a test-log line or a Scan record. The posting job opens each location itself and drops any fact it cannot confirm. A met verdict needs at least one fact the bot read or ran itself, not only the team's own words. A second pass tries to disprove each verdict, and a verdict it cannot confirm becomes can't verify.
 
-**Commands**
+From Milestone 2 the bot also builds, tests and runs the delivered code in an isolated test environment. Steps that need a node or a web UI run there against a LocalNet with test parties. A headless browser goes through the web UI steps the delivery describes and keeps screenshots. A linked public web UI is opened from outside the test environment. The bot compares the delivered structure with the approved design. It also checks how the work fits existing Canton tooling, such as the official SDKs, the token standard, Ledger API versions and Daml package upgrades. Its security review starts with Daml authorization through signatories and controllers, observers and divulgence, secret handling and dependency versions. Other languages follow. Each finding is rated critical, high, medium or low and cites a file and line.
 
-| Command | Who | What it does |
-|---|---|---|
-| `/verify` | Listed reviewer or the grantee | Runs the review again on the newest version the grantee names, for example after a fix. The grantee gets three runs a day, report edits included. A listed reviewer's run also goes past a failed evidence check. |
-| `/wrong D3` | Anyone | Marks posted item D3, or finding C1, as wrong. FTP answers every mark. |
+Every finding quotes and links its evidence. The report never recommends approval. Text hidden in a team’s evidence or code can steer the bot’s findings. The posting job removes any link that is not a confirmed source and any tag of someone other than the milestone's champion or a person on the tagging list. The bot cannot vote, approve or pay.
 
-Reviewers are SIG members and Canton Foundation or Digital Asset staff, on a list in the Fund's repository.
-
-**Example result** (made-up delivery):
-
-```
-#000 · Milestone 2 · v1.2.0 · Needs fixes
-Automated review by an AI agent. It may contain mistakes; the Fund's reviewers remain responsible for acceptance.
-
-Evidence ................ Complete
-D1 Ledger client ........ Partly met
-   cargo test: 140 passed offline; 12 skip without a node [test log]
-D2 Published crate ...... Met
-   example-sdk 1.2.0 on crates.io, published before the report [crates.io]
-D3 README quick start ... Not met
-   README sets API_TOKEN; the code reads EXAMPLE_TOKEN [README.md L40, config.rs L12]
-D4 Adoption ............. Can't verify
-   Usage is not assessed; the report states "1,200 monthly active users" [report L14]
-
-C1 High ..... Retries with no limit when the participant returns UNAVAILABLE [client.rs L210]
-C2 Medium ... Reads balances from Amulet contracts, not the token standard Holding interface [wallet.rs L88]
-
-cc @champion on D1: 12 tests need a node, so the offline result needs your sign-off
-```
-
-The top line takes the first status that applies:
-
-- **Evidence missing:** the evidence check failed and the items were not reviewed.
-- **Incomplete:** an item is missing or could not be read.
-- **Needs fixes:** any item is Not met.
-- **Not fully verified:** any item is Partly met or Can't verify.
-- **All items met:** every item is Met.
-
-**Checks by delivery type**
-
-- **Code and SDKs:** build and test the delivered version, compare docs with code, check the published package.
-- **Services:** match the running version to the code and call the linked endpoints.
-- **Integrations:** check the partner's public release.
-- **Documents:** check each acceptance item.
-- **Audits:** check that the audited version is the delivered one.
-- **Node and UI steps:** run on a LocalNet with test parties. A Playwright browser opens each linked web UI, goes through the steps the delivery describes (log in, fill forms, submit) and keeps screenshots.
-- **Usage and affiliation:** not assessed. The agent quotes the report line that states them.
-
-**Code review**
-
-- The agent looks at code quality, architecture and how the work fits existing Canton tooling, such as the official SDKs, the token standard, Ledger API versions and Daml package upgrades.
-- A review has at most five findings, each rated Critical, High, Medium or Low and pointing to file lines in the delivered version. Findings do not change any verdict or the top line.
-
-**Checks on the agent**
-
-- Every fact behind a verdict or finding has a location: file lines, a registry entry, a test-log line, a Scan record or a script result.
-- Code opens each location itself and drops any fact it cannot confirm.
-- Met needs at least one fact the tool read or ran itself. The grantee's report or pages alone are not enough.
-- Verdict reasons do not grade quality, findings speak only about the lines they cite, and neither recommends a vote.
-
-**Canton notes.** The tool's repository holds sourced notes on Canton, Daml, the Global Synchronizer, official SDKs, Scan and the Fund's process, plus a playbook built from 35 closed milestone issues and the evidence checklist. The agent searches them when it needs them. They are public, so reviewers can see what the agent knows.
-
-**Deployment and security**
-
-- One workflow file in the Fund's repository. Tool and model versions are pinned. The reviewer list, the tagging list and the criteria live in the Fund's repository. A repository switch turns the agent off.
-- The model is reached through GitHub's short-lived login token; no API key is stored. No job holds both model access and write access to the issue or the board. A separate job without model access re-checks every cited source, then posts. It removes any link other than a confirmed source or the milestone's other issue, and any @mention of anyone but the champion and people on the tagging list.
-- Board statuses go through a GitHub App the Foundation owns. Its key is a secret in the Fund's repository, held only by the job without model access, and the App changes only the Status field on the Dev Fund Milestones board. The assistant never moves a milestone in Ready for Vote or a later column.
-- Grantee code runs only in the sandbox: no secrets, no root, no network after install. A failure caused only by missing network, node or credentials gives Can't verify.
-- The agent cannot write files or run commands outside the sandbox. It reads the code, GitHub, the npm, crates.io and PyPI registries, public linked pages and a Scan endpoint the Foundation provides.
-- Each run's evidence is kept for 90 days. A re-check command confirms every cited source again without the model, so anyone can audit a verdict.
-
-**Known limits.** The report, code and test logs come from the grantee, who is paid on acceptance, and may contain text written to steer the agent. The checks limit what the agent can cite, not what it concludes. Because the assistant posts on its own, a wrong verdict or finding can be public before anyone checks it. Anyone can mark it with `/wrong`, and acceptance stays with the reviewers and the committee.
-
-**Cost.** An agent run reads code, logs and pages over many steps. We estimate US$20 to 50 a full run on a frontier model at October 2026 prices, a few dollars when the evidence check stops a run early, and about US$700 to 3,500 a month at 20 to 35 deliveries with reruns. Each run has a spending cap; items not reached get Can't verify. Builds run on free GitHub runners. FTP pays model usage during the grant and maintenance. Reruns cost the Fund nothing: payment counts each issue once.
-
-**Out of scope:** predicting votes, accepting or rejecting milestones, assessing usage or affiliation, running on proposal pull requests, moving milestones into Ready for Vote or later.
+The teams will calibrate the bot on the problems reviewers raised in past milestone reviews. They will hold out 20 past milestones at random as an eval. They draw them separately from accepted and sent-back milestones, by a method published at grant start. They leave out both teams' milestones and any milestone the bot's notes or the evidence checklist already use. Later updates to the notes and the checklist never use the held-out 20. On each past milestone, the bot sees the issue only up to the team’s delivery comment. The eval reports agreement per criterion and the share of sent-back milestones the bot catches. It reruns on every change to the bot's instructions or model. The teams merge no change that lowers agreement beyond the tolerance in the Milestone 1 design note. Anyone can mark a wrong verdict or finding with a command in the issue, and the teams answer every mark. Marks by listed reviewers count toward Milestone 3. Those marks feed the next calibration and never the held-out 20.
 
 ### 3. Architectural Alignment
 
-RFP 9 asks for tools that "reduce manual governance overhead" and lists "automation of repeatable governance workflows" ([Dev Fund roadmap](https://github.com/canton-foundation/canton-dev-fund/blob/main/2026-2028-strategic-roadmap.md)). Milestone review under CIP-0100 is repeated on every delivery.
+[RFP #9](https://github.com/canton-foundation/canton-dev-fund/blob/main/2026-2028-strategic-roadmap.md) names "proposal lifecycle tracking" and "automation of repeatable governance workflows" as focus areas. Milestone review is one such workflow. The bot's gates check the champion requirement in the fund’s review process. The bot also fills in the Status field of the existing Dev Fund Milestones board, which is set by hand today. It never moves a milestone into Ready for Vote or a later column, and leaves the fund's other workflows unchanged.
 
 ### 4. Backward Compatibility
 
-The Fund's repository gets one workflow file, the criteria file, the reviewer list and the tagging list, and the Foundation sets up its own GitHub App for the board. Deleting the workflow file turns the tool off.
-
----
+No backward compatibility impact. Smart Contract Upgrade does not apply because the bot creates no Daml contracts.
 
 ## Milestones and Deliverables
 
-### Milestone 1: The Assistant in the Fund Repository
+Deadlines count from grant approval.
 
-- **Estimated Delivery:** Month 4 (committed: month 5)
-- **Focus:** The assistant reviewing every delivery in the Fund's repository, measured on milestones the agent has not seen.
-- **Deliverables / Value Metrics:**
-  - Requirements gathered from committee members in the first weeks and published in the tool's repository. The rest of Milestone 1 is built to them. If they change a deliverable below, FTP proposes the change to the committee first.
-  - The workflow with scripts, agent, automatic runs, the daily pass, posting and commands, reviewed by the Security SIG.
-  - The evidence check, with its checklist built from past reviewer comments, and tagging of the champion or core contributors.
-  - The code review with Critical to Low ratings.
-  - Board statuses through the Foundation's GitHub App, and one pass that brings every open milestone before Ready for Vote up to date.
-  - Sandboxes for Node, Rust, Python, Go and Daml (`dpm`) that report test counts and skipped tests. On 12 closed issues published in the tool's repository, they match the Foundation reviewer's pass or fail on at least 8 of the 19 offline build, install and test steps the reviewer recorded.
-  - A LocalNet with test parties that repeats 6 of the 7 LocalNet steps in the same set, and the Playwright browser checks.
-  - The re-check command.
-  - A "Delivered versions" table for delivery reports, proposed to the Tech & Ops Committee.
-  - The accuracy measurement below, published in the tool's repository.
+The Foundation pays each team its agreed share of each milestone directly.
 
-### Milestone 2: Reviewer Adoption
+| Milestone | Deadline | Done when |
+|---|---|---|
+| 1. Report Bot | Month 3 | Requirements from committee members are gathered and published. The bot runs on every new delivery report, checks evidence and gates, posts its verdicts and sets board statuses. The Security SIG has reviewed the workflow. The bot reports on another team's real milestone. A reviewer says in the issue what it got right and wrong. On the held-out 20, a grader the committee names from outside both teams finds at least 85% of evidence checks and verdicts correct. |
+| 2. Build and Review | Month 5 | The bot builds and runs another team's milestone code, including LocalNet and browser steps. It posts its code, architecture and security review. A reviewer says in the issue what it got right and wrong. The bot runs twice on at least 20 new deliveries. The grader finds at least 90% of the first run's evidence checks and verdicts correct. Findings and how often the two runs agree are reported separately. |
+| 3. Adoption | Months 3 to 12 | Reviewers mark the bot's reports useful on other teams' milestones. |
 
-- **Estimated Delivery:** Months 5 to 12 (committed: month 13)
-- **Focus:** Live reviews that the Fund's reviewers can rely on.
-- **Deliverables / Value Metrics:**
-  - An issue qualifies when the assistant posts a full review, past the evidence check, and its milestone then goes to a committee vote. Paid per 10 qualifying issues, up to 30. Each issue counts once.
-  - Fewer than 20% of posted verdicts and findings on them are marked wrong by listed reviewers.
-  - A monthly note in the tool's repository with the counts, the `/wrong` marks and the fixes.
+A reviewer is a committee member, Foundation reviewer or the milestone's champion, from outside Obsidian and FTP. The Milestone 1 repository holds the bot, its instructions, the gate list, the evidence checklist and the calibration result. A design note chooses the agent framework, such as FTP's existing review harness, Flue or a custom harness. Another team's milestone may not reach review within 30 days of installation. A listed reviewer then starts the bot on a past milestone the committee names, and that run counts. In each measurement the grader records their own verdict first. Can't verify counts as correct only where the bot could not have checked. Measurement runs check every criterion even when the evidence check fails.
 
----
+Each Milestone 2 run gets a fresh Nix-built Docker container, isolated under gVisor and deleted afterward. It holds no keys, has no route to any other network, and reaches only approved package sources. Each run has a time limit and a cost limit. The bot follows the team's build, test and demo steps and links the logs.
+
+A Milestone 3 report qualifies when the bot posts it on a real milestone from a team other than Obsidian or FTP. That milestone must then go to a vote. A reviewer must say in the issue that the report was useful. Listed reviewers must mark fewer than 20% of its verdicts and findings wrong. Each milestone counts once.
+
+Maintenance from Milestone 2 is a separate quarterly grant, subject to committee review. It covers defect fixes, outside contributions, the evidence checklist and updates for Canton, Daml and model changes. Each update reruns the held-out test. Each quarterly note links its pull requests. The repository sits in the Foundation's GitHub organization from the start, and both teams maintain it.
 
 ## Acceptance Criteria
 
-**Milestone 1.**
-- **Freeze.** By the middle of month 3, FTP freezes a version and runs it twice on each test issue. Every run is published in the tool's repository, not on the issues.
-- **Test issues.** Every milestone delivered in the 30 days after the freeze, plus 10 older deliveries picked at random by a method fixed at grant start, at least 20 in all. The older ones are newer than the model's training data and appear in none of the notes, the evidence checklist or the backtest files. The agent sees no comment posted after the report it reviews. For the measurement it reviews every item even when the evidence check fails.
-- **Grading.** A reviewer named by the committee, not FTP staff, records their own verdict first, then grades every verdict of the first run and the evidence check on each issue. A verdict is correct if it matches, or if the grader accepts it after checking its sources. Can't verify is correct only where the tool could not have checked. Code findings are graded correct or wrong and reported separately, with their ratings.
-- **Pass.** At least 90% of verdicts and evidence checks correct. The report also states how often the two runs agree.
-
-**Milestone 2.** Each tranche is paid when 10 further qualifying issues have a full review from the assistant followed by a committee vote, and listed reviewers have marked under 20% of the posted verdicts and findings on them wrong. If its reviews do not hold up, Milestone 2 pays nothing.
-
-All measurements and counts leave out issues where FTP is the grantee, a named user or a feedback giver, and runs started by FTP staff.
-
----
+The Tech & Ops Committee accepts each milestone against the criteria above.
 
 ## Funding
 
-**Total Funding Request:** 830,000 CC
+**Total Funding Request:** 2,400,000 CC
 
-### Payment Breakdown by Milestone
+| Milestone | Deadline | CC | Paid upon |
+|---|---|---|---|
+| 1. Report Bot | Month 3 | 700,000 CC | Committee acceptance |
+| 2. Build and Review | Month 5 | 700,000 CC | Committee acceptance |
+| 3. Adoption | Months 3 to 12 | up to 1,000,000 CC | 30,000 CC per qualifying report, up to 30, plus 100,000 CC at the 30th |
+| Total |  | 2,400,000 CC |  |
 
-- Milestone 1 (The Assistant in the Fund Repository): 470,000 CC upon committee acceptance
-- Milestone 2 (Reviewer Adoption): 120,000 CC per 10 qualifying milestone issues, up to 360,000 CC
-
-360,000 CC (43%) is paid only for live reviews that hold up.
-
-### Maintenance After Milestone 2
-
-Maintenance is a separate quarterly grant, subject to committee review, at 250,000 CC a quarter, paid when the committee accepts that quarter's note. It covers:
-
-- model usage;
-- criteria updates within 14 days of a change to the Fund's documents;
-- keeping the sandbox, registry lookups, Canton notes and the evidence checklist current with Canton and Splice releases and new reviewer comments;
-- re-grading on every model change, and a graded quarterly sample;
-- an answer to every `/wrong` mark, and a first response to bug reports within a week.
-
-If maintenance is not renewed, the agent is switched off and the script checks keep running. If FTP cannot maintain the tool, or the Fund asks, FTP transfers the repository to `canton-foundation`.
+Maintenance from Milestone 2 is a separate quarterly grant of 300,000 CC a quarter, outside the 2,400,000 CC, paid when the committee accepts that quarter's note.
 
 ### Volatility Stipulation
 
-The grant is denominated in fixed Canton Coin and will require a re-evaluation at the 9-month mark.
-
----
+The project duration is greater than 6 months. The grant is denominated in fixed Canton Coin. Obsidian and FTP may request a re-evaluation of the remaining milestones at month 9. The trigger is a CC price more than 25 percent above or below its price at approval. The Tech & Ops Committee runs the re-evaluation.
 
 ## Co-Marketing
 
-Announcements with the Canton Foundation at Milestone 1, a technical post with the measurement results, and a short guide for grantees on running the tool before they post a delivery.
-
----
+At release, Obsidian and FTP will announce the bot with the Foundation, publish a technical post and demonstrate it to the committee.
 
 ## Motivation
 
-No milestone is paid without a review, so the tool serves every funded project and every reviewer. Reviewers spend their time on judgment instead of installs and builds. Grantees can run the same checks before they post, so fewer deliveries come back for fixes.
-
----
+On 19 October 2026 the fund's repository held 77 closed and 185 open [milestone issues](https://github.com/canton-foundation/canton-dev-fund/issues?q=is%3Aissue+milestone+in%3Atitle). From June to September 2026 reviewers received 14 to 23 deliveries a month. On 14 October 2026 Obsidian had an AI model read the evidence of three past milestones. Reading alone could not settle 7 of their 28 acceptance criteria. Four of those 7 needed the code built or run. From installation, the bot reviews every new delivery, and a listed reviewer can start it on any milestone. Every funded team and committee member benefits.
 
 ## Rationale
 
-- **Why an agent.** Fixed rules cannot tell whether a document covers an acceptance item or whether the tests that ran are the ones that matter. An agent can, but can be wrong, so code checks every source it cites. The Fund's AI policy holds people accountable for what they post under their own name, so the assistant posts under its own account as an AI agent, decides nothing, and FTP answers for every comment.
-- **Neutrality.** FTP is a grantee (#78) and an applicant (#617). The tool does not assess usage or affiliation, FTP's issues and runs are left out of every measurement and count, and the committee names the grader. FTP's own deliveries get the same checks as everyone else's. From Milestone 1 the code, prompts and notes are public.
-- **Alternatives.** A general coding agent run by each reviewer puts grantee code on their machines, needs every claim checked by hand and leaves no shared record.
+The bot extends the fund's GitHub process. It posts under its own account as an automated reviewer and decides nothing. Obsidian and FTP answer for it as maintainers, and the reviewers who vote stay responsible for acceptance. The teams will ask the Foundation to confirm how the fund’s [AI policy](https://github.com/canton-foundation/canton-dev-fund/blob/main/AI_POLICY.md) applies to the bot's account. General AI code-review services review pull requests. They do not check a milestone against its approved proposal or calibrate on past milestone reviews. Neither RFP #9 prior example reviews milestones. They are Avro's SV Governance dApp ([PR #223](https://github.com/canton-foundation/canton-dev-fund/pull/223)) and Obsidian's [CIP-0105 design grant](https://github.com/canton-foundation/canton-dev-fund/blob/main/proposals/2026-04-Obsidian-CIP-0105.md).
 
-**Neighbours:** the Fund's quality gates (#316, #852) and milestone tracker (#380) stay unchanged, and the Dev Fund Milestones board keeps its columns. The Canton Grants Portal (#104, closed) proposed a platform with scoring and payments; this adds none. #886 (SV governance dApp) and #741 (Anode, permissioned governance system) cover Super Validator governance.
+## Constraints, Limitations and Out of Scope
 
----
+Each report is marked as the bot's automated output. It says that it may contain mistakes and that the reviewers remain responsible for acceptance. The bot does not vote, approve or pay. The Tech & Ops Committee reviews and votes on every milestone. The review does not replace an independent audit.
 
-## Team
+The bot reads public links. It marks criteria that need private Canton data, a private repository or Canton TestNet as can't verify. It does not assess usage or affiliation and quotes the report line that states them. It uses one model provider.
 
-FTP Tech has been building on Canton Network since September 2025.
+Foundation staff own the installation and the GitHub App. Obsidian's and FTP's milestones take the same path as every other team's. Neither team's milestones count toward any measurement or payment, and neither do runs started by either team's staff. Changes to the bot's instructions go through public pull requests.
 
-So far we have delivered one of the most advanced and powerful AI tools on Canton Network:
+Ali Abrar of Obsidian is a voting member of the Tech & Ops Committee. Ali will not vote on this grant, its milestones or changes to the bot's instructions. FTP is a Development Fund grantee. The champion and the grader of every measurement come from outside both teams.
 
-1. The x402 standard under Proposal [#78](https://github.com/canton-foundation/canton-dev-fund/pull/78), with CIP-56 token support beyond the scope ([link](https://x.com/bscnews/status/2075315750491820513)).
-2. AI agents that trade and pay for services on Canton ([link](https://x.com/ftpwhatsoever/status/2094779599116771664)):
-   1. Advanced wallet for AI agents:
-      - CIP-56 swap support
-      - x402 payments
-      - Token transfers, pre-approvals, claims, UTXO merges, etc.
-   2. Advanced local and remote MCPs for agents:
-      - Trading
-      - x402 payments
-      - Transfers
+Obsidian and FTP pay the model provider from the grant, with a cost limit on each run. Obsidian hosts the test environment. Builds or monthly runs above the limits in the Milestone 1 design note trigger a re-scope with the committee. So does a change in the model provider's price or terms.
