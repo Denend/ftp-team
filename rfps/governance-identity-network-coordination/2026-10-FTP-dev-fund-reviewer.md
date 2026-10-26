@@ -59,9 +59,9 @@ The Foundation pays each team its agreed share of each milestone directly.
 
 | Milestone | Deadline | Done when |
 |---|---|---|
-| 1. Report Bot | Month 3 | Requirements from committee members are gathered and published. The bot runs on every new delivery report, checks evidence and gates, posts its verdicts and sets board statuses. The Security SIG has reviewed the workflow. The bot reports on another team's real milestone. A reviewer says in the issue what it got right and wrong. On the held-out 20, a grader the committee names from outside both teams finds at least 85% of evidence checks and verdicts correct. |
-| 2. Build and Review | Month 5 | The bot builds and runs another team's milestone code, including LocalNet and browser steps. It posts its code, architecture and security review. A reviewer says in the issue what it got right and wrong. The bot runs twice on at least 20 new deliveries. The grader finds at least 90% of the first run's evidence checks and verdicts correct. Findings and how often the two runs agree are reported separately. |
-| 3. Adoption | Months 3 to 12 | Reviewers mark the bot's reports useful on other teams' milestones. |
+| 1. Report Bot | Month 3 | Requirements from committee members are gathered and published. The bot runs on every new delivery report, checks evidence and gates, posts its verdicts and sets board statuses. The Security SIG has reviewed the workflow. The bot reports on another team's real milestone. A reviewer says in the issue what it got right and wrong. On this milestone's own delivery and on at least 10 milestones from other grants outside the held-out 20, a grader the committee names from outside both teams finds at least 85% of evidence checks and verdicts correct. |
+| 2. Build and Review | Month 5 | The bot builds and runs another team's milestone code, including LocalNet and browser steps. It posts its code, architecture and security review. A reviewer says in the issue what it got right and wrong. The bot runs twice on this milestone's own delivery and on at least 20 new deliveries from other grants outside the held-out 20. The grader finds at least 90% of the first run's evidence checks and verdicts correct. Findings and how often the two runs agree are reported separately. |
+| 3. Adoption | Months 3 to 12 | Reviewers mark the bot's reports useful on other teams' milestones. The bot also reviews this milestone's own delivery. |
 
 A reviewer is a committee member, Foundation reviewer or the milestone's champion, from outside Obsidian and FTP. The Milestone 1 repository holds the bot, its instructions, the gate list, the evidence checklist and the calibration result. A design note chooses the agent framework, such as FTP's existing review harness, Flue or a custom harness. Another team's milestone may not reach review within 30 days of installation. A listed reviewer then starts the bot on a past milestone the committee names, and that run counts. In each measurement the grader records their own verdict first. Can't verify counts as correct only where the bot could not have checked. Measurement runs check every criterion even when the evidence check fails.
 
@@ -73,7 +73,7 @@ Maintenance from Milestone 2 is a separate quarterly grant, subject to committee
 
 ## Acceptance Criteria
 
-The Tech & Ops Committee accepts each milestone against the criteria above.
+The Tech & Ops Committee accepts each milestone against the criteria above. The bot reviews every milestone of this grant itself, using what has been delivered up to that point, and the grader checks that report with the rest. Acceptance depends on it and on the reports for other grants.
 
 ## Funding
 
@@ -110,7 +110,7 @@ Each report is marked as the bot's automated output. It says that it may contain
 
 The bot reads public links. It marks criteria that need private Canton data, a private repository or Canton TestNet as can't verify. It does not assess usage or affiliation and quotes the report line that states them. It uses one model provider.
 
-Foundation staff own the installation and the GitHub App. Obsidian's and FTP's milestones take the same path as every other team's. Neither team's milestones count toward any measurement or payment, and neither do runs started by either team's staff. Changes to the bot's instructions go through public pull requests.
+Foundation staff own the installation and the GitHub App. Obsidian's and FTP's milestones take the same path as every other team's. Apart from the bot's review of this grant's own milestones, neither team's milestones count toward any measurement or payment, and neither do runs started by either team's staff. Changes to the bot's instructions go through public pull requests.
 
 Ali Abrar of Obsidian is a voting member of the Tech & Ops Committee. Ali will not vote on this grant, its milestones or changes to the bot's instructions. FTP is a Development Fund grantee. The champion and the grader of every measurement come from outside both teams.
 
