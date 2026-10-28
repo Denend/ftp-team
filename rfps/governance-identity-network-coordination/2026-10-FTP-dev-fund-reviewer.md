@@ -71,7 +71,7 @@ From Milestone 1, each run gets a fresh Nix-built Docker container, isolated und
 
 A Milestone 3 report qualifies when the bot posts it on a real milestone from a team other than Obsidian or FTP. That milestone must then go to a vote. A reviewer must say in the issue that the report was useful. Listed reviewers must mark fewer than 20% of its verdicts and findings wrong. Each milestone counts once.
 
-Maintenance from Milestone 2 is a separate quarterly grant, subject to committee review. It covers defect fixes, outside contributions, the evidence checklist and updates for Canton, Daml and model changes. Each update reruns the held-out test. Each quarterly note links its pull requests. The repository sits in the Foundation's GitHub organization from the start, and both teams maintain it.
+Maintenance from Milestone 2 is a separate quarterly grant, subject to committee review. It pays for running the bot on every delivery, including the model usage and the test environment. It also covers defect fixes, outside contributions, replies to verdicts and findings marked wrong, the evidence checklist and updates for Canton, Splice, Daml and model changes. Each update reruns the held-out test. Each quarterly note links its pull requests. The repository sits in the Foundation's GitHub organization from the start, and both teams maintain it.
 
 ## Acceptance Criteria
 
@@ -85,7 +85,7 @@ The Tech & Ops Committee accepts each milestone against the criteria above. The 
 |---|---|---|---|
 | 1. Report Bot on LocalNet | Month 3 | 700,000 CC | Committee acceptance |
 | 2. Code and UI Review | Month 5 | 700,000 CC | Committee acceptance |
-| 3. Adoption | Months 3 to 12 | up to 1,000,000 CC | 30,000 CC per qualifying report, up to 30, plus 100,000 CC at the 30th |
+| 3. Adoption | Months 3 to 12 | up to 1,000,000 CC | 10,000 CC per qualifying report, up to 100 |
 | Total |  | 2,400,000 CC |  |
 
 Maintenance from Milestone 2 is a separate quarterly grant of 300,000 CC a quarter, outside the 2,400,000 CC, paid when the committee accepts that quarter's note.
